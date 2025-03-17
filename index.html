@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Athene Parthenon to MetaMask</title>
+    <title>Add Athene Parthenon Network</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f4f7f9;
+            background-color: #f7f9fc;
             margin: 0;
             padding: 0;
             display: flex;
@@ -20,7 +20,7 @@
             background-color: #ffffff;
             padding: 40px;
             border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
             max-width: 500px;
         }
         h1 {
@@ -38,7 +38,7 @@
         .info p {
             margin: 10px 0;
         }
-        .add-btn {
+        .btn {
             background-color: #FF8C00;
             color: white;
             border: none;
@@ -47,8 +47,9 @@
             cursor: pointer;
             font-size: 18px;
             transition: background-color 0.3s;
+            margin-top: 20px;
         }
-        .add-btn:hover {
+        .btn:hover {
             background-color: #e57c00;
         }
         .contract {
@@ -65,22 +66,17 @@
 
     <div class="container">
         <h1>Add Athene Network to MetaMask</h1>
-        <p>Click the button below to automatically add the Athene Parthenon network to your MetaMask wallet.</p>
-
-        <div class="info">
-            <p><strong>Network Name:</strong> Athene Parthenon</p>
-            <p><strong>New RPC URL:</strong> https://rpc.parthenon.athenescan.io/</p>
-            <p><strong>Chain ID:</strong> 281123</p>
-            <p><strong>Currency Symbol:</strong> ETH</p>
-            <p><strong>Block Explorer:</strong> https://parthenon.athenescan.io</p>
-        </div>
+        <p>Click the button below to automatically add the Athene Parthenon network to MetaMask.</p>
 
         <!-- Add to MetaMask Button -->
-        <button class="add-btn" onclick="addNetwork()">Add Athene Parthenon to MetaMask</button>
+        <button class="btn" onclick="addNetwork()">Add Athene Parthenon to MetaMask</button>
 
         <div class="contract">
             <p><strong>ATH Contract Address:</strong> 0x21aaB3EE875179d230a5d6FD470171089020bFd0</p>
         </div>
+
+        <!-- WhatsApp Channel Button -->
+        <button class="btn" onclick="joinWhatsApp()">Join WhatsApp Channel</button>
     </div>
 
     <script>
@@ -97,14 +93,17 @@
                             symbol: 'ETH',
                             decimals: 18
                         },
-                        blockExplorerUrls: ['https://parthenon.athenescan.io/'],
+                        blockExplorerUrls: ['https://parthenon.athenescan.io'],
                     }]
                 });
-                alert('Athene Parthenon network has been added to MetaMask!');
             } catch (error) {
                 console.error('Failed to add network:', error);
                 alert('There was an error adding the network.');
             }
+        }
+
+        function joinWhatsApp() {
+            window.location.href = 'https://whatsapp.com/channel/0029Vb3pFvAGufInLdTumQ3k';
         }
     </script>
 
