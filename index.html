@@ -3,76 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Athene Network to MetaMask</title>
+    <title>Athene Parthenon Network Setup</title>
     <style>
-        /* Previous CSS remains same */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f0f4ff, #ffffff);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            max-width: 500px;
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+        }
         .network-details {
-            background: #f8f9fa;
-            padding: 15px;
+            background: #f8f9ff;
+            padding: 1.5rem;
             border-radius: 10px;
-            margin: 20px 0;
+            margin: 1.5rem 0;
             text-align: left;
         }
-        .network-details div {
-            margin: 8px 0;
-            word-break: break-all;
+        .detail-item {
+            margin: 0.8rem 0;
+            word-break: break-word;
         }
-        .contract-address {
-            color: #FF8C00;
-            font-weight: bold;
+        .status {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+        .btn {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:hover {
+            background: #357ABD;
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <h1>🌐 Add Athene Network</h1>
+        <h1>🌐 Add Athene Parthenon Network</h1>
         
         <div class="network-details">
-            <div><strong>Network Name:</strong> Athene Parthenon</div>
-            <div><strong>RPC URL:</strong> https://rpc.parthenon.athenescan.io/</div>
-            <div><strong>Chain ID:</strong> 281123 (0x44893)</div>
-            <div><strong>Currency Symbol:</strong> ETH</div>
-            <div><strong>Block Explorer:</strong> https://parthenon.athenescan.io</div>
-            <div><strong>ATH Contract:</strong> <span class="contract-address">0x21aaB3EE875179d230a5d6FD470171089020bFd0</span></div>
+            <div class="detail-item"><strong>Network Name:</strong> Athene Parthenon</div>
+            <div class="detail-item"><strong>RPC URL:</strong> https://rpc.parthenon.athenescan.io</div>
+            <div class="detail-item"><strong>Chain ID:</strong> 281123 (0x44893)</div>
+            <div class="detail-item"><strong>Currency Symbol:</strong> ETH</div>
+            <div class="detail-item"><strong>Block Explorer:</strong> https://parthenon.athenescan.io</div>
+            <div class="detail-item"><strong>ATH Contract:</strong> 0x21aaB3EE875179d230a5d6FD470171089020bFd0</div>
         </div>
 
-        <div class="btn-container">
-            <button class="btn" id="mainButton" onclick="handleWalletConnection()">🔓 Connect & Add</button>
-        </div>
+        <button class="btn" onclick="handleConnection()" id="connectBtn">
+            <span>🔗 Connect & Add Network</span>
+        </button>
 
-        <div id="statusMessage" class="status"></div>
-
-        <div class="powered-by">
-            🔥 Powered by @AirdropAlertHUB
-        </div>
+        <div class="status" id="statusMessage"></div>
     </div>
 
     <script>
-        async function handleWalletConnection() {
-            const button = document.getElementById('mainButton');
-            const statusDiv = document.getElementById('statusMessage');
-
+        async function handleConnection() {
+            const btn = document.getElementById('connectBtn');
+            const status = document.getElementById('statusMessage');
+            
             try {
                 // Check MetaMask installation
                 if (!window.ethereum) {
-                    alert('Please install MetaMask!');
+                    showStatus('Please install MetaMask!', 'error');
                     window.open('https://metamask.io', '_blank');
                     return;
                 }
 
-                // Connect wallet first
+                btn.disabled = true;
+                showStatus('Connecting wallet...', 'loading');
+
+                // Connect to wallet
                 const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-                
-                // Add Network
+                showStatus('Wallet connected! Adding network...', 'success');
+
+                // Add Athene Network
                 await ethereum.request({
                     method: 'wallet_addEthereumChain',
                     params: [{
                         chainId: '0x44893',
                         chainName: 'Athene Parthenon',
-                        rpcUrls: ['https://rpc.parthenon.athenescan.io/'],
+                        rpcUrls: ['https://rpc.parthenon.athenescan.io'],
                         nativeCurrency: {
-                            name: 'Ethereum',
+                            name: 'ETH',
                             symbol: 'ETH',
                             decimals: 18
                         },
@@ -80,7 +123,9 @@
                     }]
                 });
 
-                // Add Token
+                showStatus('Network added! Adding ATH token...', 'success');
+
+                // Add ATH Token
                 await ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
@@ -89,25 +134,43 @@
                             address: '0x21aaB3EE875179d230a5d6FD470171089020bFd0',
                             symbol: 'ATH',
                             decimals: 18,
-                            image: 'https://your-token-logo-url.com/logo.png' // Add valid logo URL
+                            image: 'https://your-logo-url.com/logo.png' // Add valid logo URL
                         }
                     }
                 });
 
-                // Update UI
-                button.disabled = true;
-                button.innerHTML = '✔️ Added Successfully';
-                statusDiv.innerHTML = 'Network and ATH token added to MetaMask!';
-                statusDiv.style.color = 'green';
+                showStatus('Success! Network and ATH token added!', 'success');
+                btn.innerHTML = '✔️ Setup Complete';
+                btn.style.backgroundColor = '#4CAF50';
 
             } catch (error) {
                 console.error('Error:', error);
-                statusDiv.innerHTML = `❌ Error: ${error.message}`;
-                statusDiv.style.color = 'red';
-                button.disabled = false;
+                showStatus(`Error: ${error.message}`, 'error');
+                btn.disabled = false;
+            }
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('statusMessage');
+            status.style.display = 'block';
+            status.textContent = message;
+            status.className = 'status';
+            
+            switch(type) {
+                case 'error':
+                    status.style.backgroundColor = '#ffebee';
+                    status.style.color = '#c62828';
+                    break;
+                case 'success':
+                    status.style.backgroundColor = '#e8f5e9';
+                    status.style.color = '#2e7d32';
+                    break;
+                case 'loading':
+                    status.style.backgroundColor = '#fff3e0';
+                    status.style.color = '#ef6c00';
+                    break;
             }
         }
     </script>
-
 </body>
 </html>
