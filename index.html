@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Athene Parthenon to MetaMask</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+        }
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+        p {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .info {
+            margin: 20px 0;
+        }
+        .info p {
+            margin: 10px 0;
+        }
+        .add-btn {
+            background-color: #FF8C00;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+        .add-btn:hover {
+            background-color: #e57c00;
+        }
+        .contract {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        .contract strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Add Athene Network to MetaMask</h1>
+        <p>Click the button below to automatically add the Athene Parthenon network to your MetaMask wallet.</p>
+
+        <div class="info">
+            <p><strong>Network Name:</strong> Athene Parthenon</p>
+            <p><strong>New RPC URL:</strong> https://rpc.parthenon.athenescan.io/</p>
+            <p><strong>Chain ID:</strong> 281123</p>
+            <p><strong>Currency Symbol:</strong> ETH</p>
+            <p><strong>Block Explorer:</strong> https://parthenon.athenescan.io</p>
+        </div>
+
+        <!-- Add to MetaMask Button -->
+        <button class="add-btn" onclick="addNetwork()">Add Athene Parthenon to MetaMask</button>
+
+        <div class="contract">
+            <p><strong>ATH Contract Address:</strong> 0x21aaB3EE875179d230a5d6FD470171089020bFd0</p>
+        </div>
+    </div>
+
+    <script>
+        async function addNetwork() {
+            try {
+                await ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [{
+                        chainId: '0x44893', // Chain ID 281123 in hexadecimal
+                        chainName: 'Athene Parthenon',
+                        rpcUrls: ['https://rpc.parthenon.athenescan.io/'],
+                        nativeCurrency: {
+                            name: 'ETH',
+                            symbol: 'ETH',
+                            decimals: 18
+                        },
+                        blockExplorerUrls: ['https://parthenon.athenescan.io/'],
+                    }]
+                });
+                alert('Athene Parthenon network has been added to MetaMask!');
+            } catch (error) {
+                console.error('Failed to add network:', error);
+                alert('There was an error adding the network.');
+            }
+        }
+    </script>
+
+</body>
+</html>
