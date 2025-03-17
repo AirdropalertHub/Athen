@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Athene Parthenon Network</title>
+    <title>Add Athene Network to MetaMask</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -85,11 +85,11 @@
                 await ethereum.request({
                     method: 'wallet_addEthereumChain',
                     params: [{
-                        chainId: '0x44893', // Chain ID 281123 in hexadecimal
+                        chainId: '0x44893', // Chain ID 281123 in hexadecimal format (0x44893)
                         chainName: 'Athene Parthenon',
                         rpcUrls: ['https://rpc.parthenon.athenescan.io/'],
                         nativeCurrency: {
-                            name: 'ETH',
+                            name: 'Ethereum',
                             symbol: 'ETH',
                             decimals: 18
                         },
