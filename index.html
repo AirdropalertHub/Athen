@@ -5,48 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Athene Network to MetaMask</title>
     <style>
-        /* Keep previous styles */
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #f7f9fc 0%, #e6f0ff 100%);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            text-align: center;
+        /* Previous CSS remains same */
+        .network-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
         }
-        .container {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            margin: 20px;
-            position: relative;
+        .network-details div {
+            margin: 8px 0;
+            word-break: break-all;
         }
-        /* Rest of the CSS remains same */
+        .contract-address {
+            color: #FF8C00;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>🚀 Add Athene Network to MetaMask</h1>
+        <h1>🌐 Add Athene Network</h1>
         
-        <p class="description">First connect your wallet, then add the network</p>
+        <div class="network-details">
+            <div><strong>Network Name:</strong> Athene Parthenon</div>
+            <div><strong>RPC URL:</strong> https://rpc.parthenon.athenescan.io/</div>
+            <div><strong>Chain ID:</strong> 281123 (0x44893)</div>
+            <div><strong>Currency Symbol:</strong> ETH</div>
+            <div><strong>Block Explorer:</strong> https://parthenon.athenescan.io</div>
+            <div><strong>ATH Contract:</strong> <span class="contract-address">0x21aaB3EE875179d230a5d6FD470171089020bFd0</span></div>
+        </div>
 
         <div class="btn-container">
-            <button class="btn" id="mainButton" onclick="handleWalletConnection()">🔓 Connect Wallet</button>
-            <button class="btn btn-whatsapp" onclick="joinWhatsApp()">📢 WhatsApp Updates</button>
+            <button class="btn" id="mainButton" onclick="handleWalletConnection()">🔓 Connect & Add</button>
         </div>
 
         <div id="statusMessage" class="status"></div>
-
-        <div class="contract">
-            <strong>ATH Contract:</strong><br>
-            0x21aaB3EE875179d230a5d6FD470171089020bFd0
-        </div>
 
         <div class="powered-by">
             🔥 Powered by @AirdropAlertHUB
@@ -54,43 +49,22 @@
     </div>
 
     <script>
-        let isConnected = false;
-
         async function handleWalletConnection() {
+            const button = document.getElementById('mainButton');
+            const statusDiv = document.getElementById('statusMessage');
+
             try {
-                // First check MetaMask installation
+                // Check MetaMask installation
                 if (!window.ethereum) {
                     alert('Please install MetaMask!');
                     window.open('https://metamask.io', '_blank');
                     return;
                 }
 
-                const button = document.getElementById('mainButton');
-                const statusDiv = document.getElementById('statusMessage');
-
-                if (!isConnected) {
-                    // Connect wallet first
-                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-                    isConnected = true;
-                    button.innerHTML = '🌐 Add Athene Network';
-                    statusDiv.innerHTML = '✅ Wallet connected!';
-                    statusDiv.style.color = 'green';
-                } else {
-                    // Add network after connection
-                    await addNetwork();
-                    button.disabled = true;
-                    button.innerHTML = '✔️ Network Added';
-                    statusDiv.innerHTML = '🎉 Network successfully added!';
-                    statusDiv.style.color = 'blue';
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Operation failed, please try again');
-            }
-        }
-
-        async function addNetwork() {
-            try {
+                // Connect wallet first
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                
+                // Add Network
                 await ethereum.request({
                     method: 'wallet_addEthereumChain',
                     params: [{
@@ -102,11 +76,11 @@
                             symbol: 'ETH',
                             decimals: 18
                         },
-                        blockExplorerUrls: ['https://parthenon.athenescan.io'],
+                        blockExplorerUrls: ['https://parthenon.athenescan.io']
                     }]
                 });
 
-                // Auto-add token after network
+                // Add Token
                 await ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
@@ -115,17 +89,23 @@
                             address: '0x21aaB3EE875179d230a5d6FD470171089020bFd0',
                             symbol: 'ATH',
                             decimals: 18,
-                            image: 'https://example.com/logo.png' // Add actual logo URL
+                            image: 'https://your-token-logo-url.com/logo.png' // Add valid logo URL
                         }
                     }
                 });
-            } catch (error) {
-                throw new Error('Failed to add network');
-            }
-        }
 
-        function joinWhatsApp() {
-            window.open('https://whatsapp.com/channel/0029Vb3pFvAGufInLdTumQ3k', '_blank');
+                // Update UI
+                button.disabled = true;
+                button.innerHTML = '✔️ Added Successfully';
+                statusDiv.innerHTML = 'Network and ATH token added to MetaMask!';
+                statusDiv.style.color = 'green';
+
+            } catch (error) {
+                console.error('Error:', error);
+                statusDiv.innerHTML = `❌ Error: ${error.message}`;
+                statusDiv.style.color = 'red';
+                button.disabled = false;
+            }
         }
     </script>
 
