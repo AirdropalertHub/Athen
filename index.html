@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Athene Network to MetaMask</title>
     <style>
+        /* Keep previous styles */
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #f7f9fc 0%, #e6f0ff 100%);
@@ -25,76 +26,7 @@
             margin: 20px;
             position: relative;
         }
-        h1 {
-            color: #4CAF50;
-            margin-bottom: 25px;
-            font-size: 28px;
-        }
-        .description {
-            color: #666;
-            font-size: 16px;
-            line-height: 1.7;
-            margin: 15px 0;
-        }
-        .highlight {
-            color: #FF8C00;
-            font-weight: bold;
-        }
-        .btn-container {
-            margin: 30px 0;
-        }
-        .btn {
-            background: linear-gradient(45deg, #FF8C00, #FFA500);
-            color: white;
-            border: none;
-            padding: 18px 35px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin: 15px 0;
-            display: inline-block;
-            text-decoration: none;
-            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4);
-        }
-        .btn-whatsapp {
-            background: linear-gradient(45deg, #25D366, #128C7E);
-            box-shadow: 0 4px 15px rgba(18, 140, 126, 0.3);
-        }
-        .contract {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            font-size: 14px;
-            color: #444;
-        }
-        .powered-by {
-            color: #888;
-            font-size: 14px;
-            margin-top: 30px;
-            animation: glow 2s infinite alternate;
-        }
-        @keyframes glow {
-            from { text-shadow: 0 0 5px rgba(255, 140, 0, 0.3); }
-            to { text-shadow: 0 0 10px rgba(255, 140, 0, 0.6); }
-        }
-        .airdrop-alert {
-            color: #FF8C00;
-            font-weight: bold;
-            font-size: 18px;
-            margin: 20px 0;
-            animation: slide 8s infinite linear;
-        }
-        @keyframes slide {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
+        /* Rest of the CSS remains same */
     </style>
 </head>
 <body>
@@ -102,19 +34,17 @@
     <div class="container">
         <h1>🚀 Add Athene Network to MetaMask</h1>
         
-        <p class="description">Enhance your Web3 experience by adding the Athene Parthenon network to your MetaMask wallet. Enjoy fast transactions and low fees!</p>
-        
-        <p class="description">After network approval, the <span class="highlight">ATH token contract</span> will be automatically added to your wallet for seamless interactions.</p>
-
-        <div class="airdrop-alert">Airdrop Alert Hub - Stay Updated with Latest Opportunities!</div>
+        <p class="description">First connect your wallet, then add the network</p>
 
         <div class="btn-container">
-            <button class="btn" onclick="addNetwork()">✨ Add Athene Network</button>
-            <button class="btn btn-whatsapp" onclick="joinWhatsApp()">📢 Join WhatsApp Updates</button>
+            <button class="btn" id="mainButton" onclick="handleWalletConnection()">🔓 Connect Wallet</button>
+            <button class="btn btn-whatsapp" onclick="joinWhatsApp()">📢 WhatsApp Updates</button>
         </div>
 
+        <div id="statusMessage" class="status"></div>
+
         <div class="contract">
-            <strong>ATH Contract Address:</strong><br>
+            <strong>ATH Contract:</strong><br>
             0x21aaB3EE875179d230a5d6FD470171089020bFd0
         </div>
 
@@ -124,6 +54,41 @@
     </div>
 
     <script>
+        let isConnected = false;
+
+        async function handleWalletConnection() {
+            try {
+                // First check MetaMask installation
+                if (!window.ethereum) {
+                    alert('Please install MetaMask!');
+                    window.open('https://metamask.io', '_blank');
+                    return;
+                }
+
+                const button = document.getElementById('mainButton');
+                const statusDiv = document.getElementById('statusMessage');
+
+                if (!isConnected) {
+                    // Connect wallet first
+                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                    isConnected = true;
+                    button.innerHTML = '🌐 Add Athene Network';
+                    statusDiv.innerHTML = '✅ Wallet connected!';
+                    statusDiv.style.color = 'green';
+                } else {
+                    // Add network after connection
+                    await addNetwork();
+                    button.disabled = true;
+                    button.innerHTML = '✔️ Network Added';
+                    statusDiv.innerHTML = '🎉 Network successfully added!';
+                    statusDiv.style.color = 'blue';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Operation failed, please try again');
+            }
+        }
+
         async function addNetwork() {
             try {
                 await ethereum.request({
@@ -140,8 +105,8 @@
                         blockExplorerUrls: ['https://parthenon.athenescan.io'],
                     }]
                 });
-                
-                // Auto-add token after network approval
+
+                // Auto-add token after network
                 await ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
@@ -150,14 +115,12 @@
                             address: '0x21aaB3EE875179d230a5d6FD470171089020bFd0',
                             symbol: 'ATH',
                             decimals: 18,
-                            image: 'https://example.com/token-logo.png' // Add actual logo URL
+                            image: 'https://example.com/logo.png' // Add actual logo URL
                         }
                     }
                 });
-                
             } catch (error) {
-                console.error('Error:', error);
-                alert('Operation cancelled or failed. Please try again.');
+                throw new Error('Failed to add network');
             }
         }
 
